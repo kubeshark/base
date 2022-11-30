@@ -14,7 +14,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/kubeshark/worker/api"
+	"github.com/kubeshark/base/pkg/api"
 	"github.com/stretchr/testify/assert"
 )
 

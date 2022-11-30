@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/kubeshark/worker/api"
+	"github.com/kubeshark/base/pkg/api"
 )
 
 const userAgent = "user-agent"
