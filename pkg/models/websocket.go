@@ -39,7 +39,7 @@ type WebSocketTargettedPodsMessage struct {
 
 type WebSocketWorkerConfigMessage struct {
 	*WebSocketMessageMetadata
-	TargettedPod []v1.Pod `json:"pods"`
+	TargettedPods []v1.Pod `json:"pods"`
 }
 
 type WebSocketEntryMessage struct {
