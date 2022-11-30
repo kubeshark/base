@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
-	"log"
 	"time"
 
 	"github.com/kubeshark/base/pkg/api"
@@ -38,10 +37,6 @@ func (d dissecting) Register(extension *api.Extension) {
 
 func (d dissecting) GetProtocols() map[string]*api.Protocol {
 	return protocolsMap
-}
-
-func (d dissecting) Ping() {
-	log.Printf("pong %s", _protocol.Name)
 }
 
 func (d dissecting) Dissect(b *bufio.Reader, reader api.TcpReader, options *api.TrafficFilteringOptions) error {

@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"net/url"
 	"strings"
@@ -132,10 +131,6 @@ func (d dissecting) Register(extension *api.Extension) {
 
 func (d dissecting) GetProtocols() map[string]*api.Protocol {
 	return protocolsMap
-}
-
-func (d dissecting) Ping() {
-	log.Printf("pong %s", http11protocol.Name)
 }
 
 func (d dissecting) Dissect(b *bufio.Reader, reader api.TcpReader, options *api.TrafficFilteringOptions) error {

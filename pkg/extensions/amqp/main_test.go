@@ -50,11 +50,6 @@ func TestMacros(t *testing.T) {
 	assert.Equal(t, expectedMacros, macros)
 }
 
-func TestPing(t *testing.T) {
-	dissector := NewDissector()
-	dissector.Ping()
-}
-
 func TestDissect(t *testing.T) {
 	_, testUpdateEnabled := os.LookupEnv(testUpdate)
 
