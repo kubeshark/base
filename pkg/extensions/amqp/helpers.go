@@ -3,11 +3,11 @@ package amqp
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"sort"
 	"strconv"
 
 	"github.com/kubeshark/base/pkg/api"
+	"github.com/rs/zerolog/log"
 )
 
 var connectionMethodMap = map[int]string{
@@ -613,7 +613,7 @@ func representConnectionStart(event map[string]interface{}) []interface{} {
 				x, _ := json.Marshal(value)
 				outcome = string(x)
 			default:
-				log.Print("Unknown data type for the server property!")
+				log.Debug().Interface("v", v).Msg("Unknown data type for the server property!")
 			}
 			headers = append(headers, api.TableData{
 				Name:     name,
@@ -672,7 +672,7 @@ func representConnectionStartOk(event map[string]interface{}) []interface{} {
 				x, _ := json.Marshal(value)
 				outcome = string(x)
 			default:
-				log.Print("Unknown data type for the client property!")
+				log.Debug().Interface("v", v).Msg("Unknown data type for the client property!")
 			}
 			headers = append(headers, api.TableData{
 				Name:     name,
