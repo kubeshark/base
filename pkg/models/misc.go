@@ -1,9 +1,9 @@
 package models
 
 type HealthResponse struct {
-	TappedPods            []*PodInfo      `json:"tappedPods"`
-	ConnectedTappersCount int             `json:"connectedTappersCount"`
-	TappersStatus         []*TapperStatus `json:"tappersStatus"`
+	TargettedPods         []*PodInfo      `json:"targettedPods"`
+	ConnectedWorkersCount int             `json:"connectedWorkersCount"`
+	WorkersStatus         []*WorkerStatus `json:"workersStatus"`
 }
 
 type VersionResponse struct {

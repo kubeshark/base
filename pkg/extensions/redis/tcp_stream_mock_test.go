@@ -8,7 +8,7 @@ import (
 
 type tcpStream struct {
 	isClosed       bool
-	isTapTarget    bool
+	isTargetted    bool
 	origin         api.Capture
 	reqResMatchers []api.RequestResponseMatcher
 	sync.Mutex
@@ -30,8 +30,8 @@ func (t *tcpStream) GetReqResMatchers() []api.RequestResponseMatcher {
 	return t.reqResMatchers
 }
 
-func (t *tcpStream) GetIsTapTarget() bool {
-	return t.isTapTarget
+func (t *tcpStream) GetIsTargetted() bool {
+	return t.isTargetted
 }
 
 func (t *tcpStream) GetIsClosed() bool {

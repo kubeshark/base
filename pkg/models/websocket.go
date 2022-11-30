@@ -12,15 +12,15 @@ import (
 type WebSocketMessageType string
 
 const (
-	WebSocketMessageTypeEntry            WebSocketMessageType = "entry"
-	WebSocketMessageTypeFullEntry        WebSocketMessageType = "fullEntry"
-	WebSocketMessageTypeTappedEntry      WebSocketMessageType = "tappedEntry"
-	WebSocketMessageTypeUpdateStatus     WebSocketMessageType = "status"
-	WebSocketMessageTypeUpdateTappedPods WebSocketMessageType = "tappedPods"
-	WebSocketMessageTypeToast            WebSocketMessageType = "toast"
-	WebSocketMessageTypeQueryMetadata    WebSocketMessageType = "queryMetadata"
-	WebSocketMessageTypeStartTime        WebSocketMessageType = "startTime"
-	WebSocketMessageTypeTapConfig        WebSocketMessageType = "tapConfig"
+	WebSocketMessageTypeEntry               WebSocketMessageType = "entry"
+	WebSocketMessageTypeFullEntry           WebSocketMessageType = "fullEntry"
+	WebSocketMessageTypeWorkerEntry         WebSocketMessageType = "targettedEntry"
+	WebSocketMessageTypeUpdateStatus        WebSocketMessageType = "status"
+	WebSocketMessageTypeUpdateTargettedPods WebSocketMessageType = "targettedPods"
+	WebSocketMessageTypeToast               WebSocketMessageType = "toast"
+	WebSocketMessageTypeQueryMetadata       WebSocketMessageType = "queryMetadata"
+	WebSocketMessageTypeStartTime           WebSocketMessageType = "startTime"
+	WebSocketMessageTypeWorkerConfig        WebSocketMessageType = "workerConfig"
 )
 
 type WebSocketMessageMetadata struct {
@@ -29,17 +29,17 @@ type WebSocketMessageMetadata struct {
 
 type WebSocketStatusMessage struct {
 	*WebSocketMessageMetadata
-	TappingStatus []TappedPodStatus `json:"tappingStatus"`
+	TargettingStatus []TargettedPodStatus `json:"targettingStatus"`
 }
 
-type WebSocketTappedPodsMessage struct {
+type WebSocketTargettedPodsMessage struct {
 	*WebSocketMessageMetadata
-	NodeToTappedPodMap NodeToPodsMap `json:"nodeToTappedPodMap"`
+	NodeToTargettedPodsMap NodeToPodsMap `json:"nodeToTargettedPodsMap"`
 }
 
-type WebSocketTapConfigMessage struct {
+type WebSocketWorkerConfigMessage struct {
 	*WebSocketMessageMetadata
-	TapTargets []v1.Pod `json:"pods"`
+	TargettedPod []v1.Pod `json:"pods"`
 }
 
 type WebSocketEntryMessage struct {
@@ -52,7 +52,7 @@ type WebSocketFullEntryMessage struct {
 	Data *api.Entry `json:"data,omitempty"`
 }
 
-type WebSocketTappedEntryMessage struct {
+type WebSocketWorkerEntryMessage struct {
 	*WebSocketMessageMetadata
 	Data *api.OutputChannelItem
 }
@@ -92,10 +92,10 @@ func CreateFullEntryWebSocketMessage(entry *api.Entry) ([]byte, error) {
 	return json.Marshal(message)
 }
 
-func CreateWebsocketTappedEntryMessage(base *api.OutputChannelItem) ([]byte, error) {
-	message := &WebSocketTappedEntryMessage{
+func CreateWebsocketWorkerEntryMessage(base *api.OutputChannelItem) ([]byte, error) {
+	message := &WebSocketWorkerEntryMessage{
 		WebSocketMessageMetadata: &WebSocketMessageMetadata{
-			MessageType: WebSocketMessageTypeTappedEntry,
+			MessageType: WebSocketMessageTypeWorkerEntry,
 		},
 		Data: base,
 	}

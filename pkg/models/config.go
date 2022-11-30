@@ -15,14 +15,13 @@ type OASConfig struct {
 }
 
 type Config struct {
-	MaxDBSizeBytes              int64         `json:"maxDBSizeBytes"`
-	InsertionFilter             string        `json:"insertionFilter"`
-	AgentImage                  string        `json:"agentImage"`
-	PullPolicy                  string        `json:"pullPolicy"`
-	LogLevel                    logging.Level `json:"logLevel"`
-	TapperResources             Resources     `json:"tapperResources"`
-	KubesharkResourcesNamespace string        `json:"kubesharkResourceNamespace"`
-	AgentDatabasePath           string        `json:"agentDatabasePath"`
-	ServiceMap                  bool          `json:"serviceMap"`
-	OAS                         OASConfig     `json:"oas"`
+	MaxDBSizeBytes     int64         `json:"maxDBSizeBytes"`
+	InsertionFilter    string        `json:"insertionFilter"`
+	PullPolicy         string        `json:"pullPolicy"`
+	LogLevel           logging.Level `json:"logLevel"`
+	WorkerResources    Resources     `json:"workerResources"`
+	ResourcesNamespace string        `json:"resourceNamespace"`
+	DatabasePath       string        `json:"databasePath"`
+	ServiceMap         bool          `json:"serviceMap"`
+	OAS                OASConfig     `json:"oas"`
 }

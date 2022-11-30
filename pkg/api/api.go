@@ -245,7 +245,7 @@ type TcpStream interface {
 	SetProtocol(protocol *Protocol)
 	GetOrigin() Capture
 	GetReqResMatchers() []RequestResponseMatcher
-	GetIsTapTarget() bool
+	GetIsTargetted() bool
 	GetIsClosed() bool
 }
 

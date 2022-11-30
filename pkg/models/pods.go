@@ -3,21 +3,21 @@ package models
 import v1 "k8s.io/api/core/v1"
 
 type PodInfo struct {
-	Namespace string `json:"namespace"`
 	Name      string `json:"name"`
 	NodeName  string `json:"nodeName"`
-}
-
-type TappedPodStatus struct {
-	Name      string `json:"name"`
 	Namespace string `json:"namespace"`
-	IsTapped  bool   `json:"isTapped"`
 }
 
-type TapperStatus struct {
-	TapperName string `json:"tapperName"`
-	NodeName   string `json:"nodeName"`
-	Status     string `json:"status"`
+type TargettedPodStatus struct {
+	Name        string `json:"name"`
+	Namespace   string `json:"namespace"`
+	IsTargetted bool   `json:"isTargetted"`
+}
+
+type WorkerStatus struct {
+	Name     string `json:"name"`
+	NodeName string `json:"nodeName"`
+	Status   string `json:"status"`
 }
 
 type NodeToPodsMap map[string][]v1.Pod
@@ -33,20 +33,20 @@ func (np NodeToPodsMap) Summary() map[string][]string {
 	return summary
 }
 
-func CreateWebSocketStatusMessage(tappedPodsStatus []TappedPodStatus) WebSocketStatusMessage {
+func CreateWebSocketStatusMessage(targettedPodsStatus []TargettedPodStatus) WebSocketStatusMessage {
 	return WebSocketStatusMessage{
 		WebSocketMessageMetadata: &WebSocketMessageMetadata{
 			MessageType: WebSocketMessageTypeUpdateStatus,
 		},
-		TappingStatus: tappedPodsStatus,
+		TargettingStatus: targettedPodsStatus,
 	}
 }
 
-func CreateWebSocketTappedPodsMessage(nodeToTappedPodMap NodeToPodsMap) WebSocketTappedPodsMessage {
-	return WebSocketTappedPodsMessage{
+func CreateWebSocketTargettedPodsMessage(nodeToTargettedPodsMap NodeToPodsMap) WebSocketTargettedPodsMessage {
+	return WebSocketTargettedPodsMessage{
 		WebSocketMessageMetadata: &WebSocketMessageMetadata{
-			MessageType: WebSocketMessageTypeUpdateTappedPods,
+			MessageType: WebSocketMessageTypeUpdateTargettedPods,
 		},
-		NodeToTappedPodMap: nodeToTappedPodMap,
+		NodeToTargettedPodsMap: nodeToTargettedPodsMap,
 	}
 }
