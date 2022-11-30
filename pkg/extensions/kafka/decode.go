@@ -7,6 +7,8 @@ import (
 	"io"
 	"reflect"
 	"strings"
+
+	"github.com/rs/zerolog/log"
 )
 
 type discarder interface {
@@ -350,8 +352,10 @@ func decodeFuncOf(typ reflect.Type, version int16, flexible bool, tag structTag)
 		}
 		return arrayDecodeFuncOf(typ, version, flexible, tag)
 	default:
-		panic("unsupported type: " + typ.String())
+		log.Error().Str("type", typ.String()).Msg("Kafka decode unsupported type:")
 	}
+
+	return nil
 }
 
 func stringDecodeFuncOf(flexible bool, tag structTag) decodeFunc {

@@ -6,6 +6,8 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
+
+	"github.com/rs/zerolog/log"
 )
 
 // Message is an interface implemented by all request and response types of the
@@ -241,19 +243,19 @@ func forEachStructTag(tag string, do func(structTag) bool) {
 		})
 
 		if err != nil {
-			panic(fmt.Errorf("malformed struct tag: %w", err))
+			log.Error().Err(err).Msg("Kafka malformed struct tag.")
 		}
 
 		if tag.MinVersion < 0 && tag.MaxVersion >= 0 {
-			panic(fmt.Errorf("missing minimum version in struct tag: %q", s))
+			log.Error().Str("struct-tag", s).Msg("Kafka missing minimum version in:")
 		}
 
 		if tag.MaxVersion < 0 && tag.MinVersion >= 0 {
-			panic(fmt.Errorf("missing maximum version in struct tag: %q", s))
+			log.Error().Str("struct-tag", s).Msg("Kafka missing maximum version in:")
 		}
 
 		if tag.MinVersion > tag.MaxVersion {
-			panic(fmt.Errorf("invalid version range in struct tag: %q", s))
+			log.Error().Str("struct-tag", s).Msg("Kafka invalid version range in:")
 		}
 
 		return do(tag)

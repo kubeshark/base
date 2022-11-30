@@ -3,11 +3,11 @@ package http
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"net/http"
 	"sort"
 
 	"github.com/google/martian/har"
+	"github.com/rs/zerolog/log"
 )
 
 type HTTPPayload struct {
@@ -95,6 +95,8 @@ func (h HTTPPayload) MarshalJSON() ([]byte, error) {
 			Details: harResponse,
 		})
 	default:
-		panic(fmt.Sprintf("HTTP payload cannot be marshaled: %v", h.Type))
+		msg := "HTTP payload cannot be marshaled."
+		log.Error().Int("type", int(h.Type)).Msg(msg)
+		return []byte{}, errors.New(msg)
 	}
 }
