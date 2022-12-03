@@ -7,6 +7,8 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/google/gopacket"
 )
 
 const UnknownNamespace = ""
@@ -148,6 +150,7 @@ type RequestResponseMatcher interface {
 
 type Emitting struct {
 	AppStats      *AppStats
+	Stream        TcpStream
 	OutputChannel chan *OutputChannelItem
 }
 
@@ -157,8 +160,11 @@ type Emitter interface {
 
 func (e *Emitting) Emit(item *OutputChannelItem) {
 	e.AppStats.IncMatchedPairs()
+	e.Stream.SetAsEmittable()
 
-	e.OutputChannel <- item
+	if !e.Stream.GetIsIdentifyMode() {
+		e.OutputChannel <- item
+	}
 }
 
 type Entry struct {
@@ -225,6 +231,7 @@ type TableData struct {
 type TcpReaderDataMsg interface {
 	GetBytes() []byte
 	GetTimestamp() time.Time
+	GetCaptureInfo() gopacket.CaptureInfo
 }
 
 type TcpReader interface {
@@ -242,6 +249,8 @@ type TcpReader interface {
 
 type TcpStream interface {
 	SetProtocol(protocol *Protocol)
+	SetAsEmittable()
+	GetIsIdentifyMode() bool
 	GetOrigin() Capture
 	GetReqResMatchers() []RequestResponseMatcher
 	GetIsTargetted() bool
