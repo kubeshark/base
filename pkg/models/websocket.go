@@ -5,8 +5,6 @@ import (
 
 	"github.com/kubeshark/base/pkg/api"
 	v1 "k8s.io/api/core/v1"
-
-	basenine "github.com/up9inc/basenine/client/go"
 )
 
 type WebSocketMessageType string
@@ -62,11 +60,6 @@ type WebSocketToastMessage struct {
 	Data *ToastMessage `json:"data,omitempty"`
 }
 
-type WebSocketQueryMetadataMessage struct {
-	*WebSocketMessageMetadata
-	Data *basenine.Metadata `json:"data,omitempty"`
-}
-
 type WebSocketStartTimeMessage struct {
 	*WebSocketMessageMetadata
 	Data int64 `json:"data"`
@@ -106,16 +99,6 @@ func CreateWebsocketToastMessage(base *ToastMessage) ([]byte, error) {
 	message := &WebSocketToastMessage{
 		WebSocketMessageMetadata: &WebSocketMessageMetadata{
 			MessageType: WebSocketMessageTypeToast,
-		},
-		Data: base,
-	}
-	return json.Marshal(message)
-}
-
-func CreateWebsocketQueryMetadataMessage(base *basenine.Metadata) ([]byte, error) {
-	message := &WebSocketQueryMetadataMessage{
-		WebSocketMessageMetadata: &WebSocketMessageMetadata{
-			MessageType: WebSocketMessageTypeQueryMetadata,
 		},
 		Data: base,
 	}

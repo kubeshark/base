@@ -15,7 +15,6 @@ require (
 	github.com/rs/zerolog v1.28.0
 	github.com/segmentio/kafka-go v0.4.38
 	github.com/stretchr/testify v1.8.1
-	github.com/up9inc/basenine/client/go v0.0.0-20220612112747-3b28eeac9c51
 	golang.org/x/net v0.2.0
 	golang.org/x/text v0.4.0
 	k8s.io/api v0.23.3
