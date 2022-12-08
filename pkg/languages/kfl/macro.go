@@ -9,19 +9,33 @@ import (
 	"sort"
 
 	"github.com/dlclark/regexp2"
+	"github.com/kubeshark/base/pkg/extensions"
 )
 
-// addMacro takes macros map, macro and its corresponding expanded version
+var macros map[string]string // global
+
+func init() {
+	extensions.LoadExtensions()
+
+	for _, extension := range extensions.Extensions {
+		macros := extension.Dissector.Macros()
+		for macro, expanded := range macros {
+			AddMacro(macro, expanded)
+		}
+	}
+}
+
+// AddMacro takes macro and its corresponding expanded version
 // as arguments. It stores the macro in a global map.
-func AddMacro(macros map[string]string, macro string, expanded string) map[string]string {
+func AddMacro(macro string, expanded string) map[string]string {
 	macros[macro] = fmt.Sprintf("(%s)", expanded)
 	return macros
 }
 
-// expandMacro expands the macros in a given query, if there are any.
+// ExpandMacro expands the macros in a given query, if there are any.
 // It uses a lookahead regular expression to ignore the occurences
 // of the macro inside the string literals.
-func ExpandMacros(macros map[string]string, query string) (string, error) {
+func ExpandMacros(query string) (string, error) {
 	var err error
 
 	type pair struct {
