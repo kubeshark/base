@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/google/gopacket"
+	"github.com/kubeshark/gopacket"
 )
 
 const UnknownNamespace = ""
@@ -105,6 +105,7 @@ type RequestResponsePair struct {
 
 type OutputChannelItem struct {
 	// `Protocol` is modified in later stages of data propagation. Therefore, it's not a pointer.
+	Id             string
 	Protocol       Protocol
 	Capture        Capture
 	Timestamp      int64
@@ -163,6 +164,7 @@ func (e *Emitting) Emit(item *OutputChannelItem) {
 	e.Stream.SetAsEmittable()
 
 	if !e.Stream.GetIsIdentifyMode() {
+		item.Id = e.Stream.GetId()
 		e.OutputChannel <- item
 	}
 }
@@ -250,6 +252,7 @@ type TcpReader interface {
 type TcpStream interface {
 	SetProtocol(protocol *Protocol)
 	SetAsEmittable()
+	GetId() string
 	GetIsIdentifyMode() bool
 	GetOrigin() Capture
 	GetReqResMatchers() []RequestResponseMatcher

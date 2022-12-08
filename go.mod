@@ -5,9 +5,11 @@ go 1.17
 require (
 	github.com/fatih/camelcase v1.0.0
 	github.com/google/martian v2.1.0+incompatible
+	github.com/kubeshark/gopacket v1.1.20
 	github.com/mertyildiran/gqlparser/v2 v2.4.6
 	github.com/ohler55/ojg v1.14.5
 	github.com/op/go-logging v0.0.0-20160315200505-970db520ece7
+	github.com/rs/zerolog v1.28.0
 	github.com/segmentio/kafka-go v0.4.38
 	github.com/stretchr/testify v1.8.1
 	github.com/up9inc/basenine/client/go v0.0.0-20220612112747-3b28eeac9c51
@@ -30,7 +32,6 @@ require (
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pierrec/lz4/v4 v4.1.15 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	github.com/rs/zerolog v1.28.0 // indirect
 	golang.org/x/sys v0.2.0 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
