@@ -3,6 +3,9 @@ module github.com/kubeshark/base
 go 1.17
 
 require (
+	github.com/alecthomas/participle/v2 v2.0.0-alpha7
+	github.com/clbanning/mxj/v2 v2.5.5
+	github.com/dlclark/regexp2 v1.4.0
 	github.com/fatih/camelcase v1.0.0
 	github.com/google/martian v2.1.0+incompatible
 	github.com/kubeshark/gopacket v1.1.20
