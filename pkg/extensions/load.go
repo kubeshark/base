@@ -13,7 +13,7 @@ import (
 var (
 	Extensions    []*api.Extension          // global
 	ExtensionsMap map[string]*api.Extension // global
-	ProtocolsMap  map[string]*api.Protocol  //global
+	ProtocolsMap  map[string]*api.Protocol  // global
 )
 
 func LoadExtensions() {

@@ -15,11 +15,11 @@ import (
 var macros map[string]string // global
 
 func init() {
+	macros = make(map[string]string, 0)
 	extensions.LoadExtensions()
 
 	for _, extension := range extensions.Extensions {
-		macros := extension.Dissector.Macros()
-		for macro, expanded := range macros {
+		for macro, expanded := range extension.Dissector.Macros() {
 			AddMacro(macro, expanded)
 		}
 	}
