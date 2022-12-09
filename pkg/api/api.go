@@ -164,7 +164,7 @@ func (e *Emitting) Emit(item *OutputChannelItem) {
 	e.Stream.SetAsEmittable()
 
 	if !e.Stream.GetIsIdentifyMode() {
-		item.Id = e.Stream.GetId()
+		item.Id = e.Stream.GetPcapId()
 		e.Stream.IncrementItemCount()
 		e.OutputChannel <- item
 	}
@@ -253,7 +253,7 @@ type TcpReader interface {
 type TcpStream interface {
 	SetProtocol(protocol *Protocol)
 	SetAsEmittable()
-	GetId() string
+	GetPcapId() string
 	GetIsIdentifyMode() bool
 	GetOrigin() Capture
 	GetReqResMatchers() []RequestResponseMatcher
