@@ -32,21 +32,3 @@ func (np NodeToPodsMap) Summary() map[string][]string {
 
 	return summary
 }
-
-func CreateWebSocketStatusMessage(targettedPodsStatus []TargettedPodStatus) WebSocketStatusMessage {
-	return WebSocketStatusMessage{
-		WebSocketMessageMetadata: &WebSocketMessageMetadata{
-			MessageType: WebSocketMessageTypeUpdateStatus,
-		},
-		TargettingStatus: targettedPodsStatus,
-	}
-}
-
-func CreateWebSocketTargettedPodsMessage(nodeToTargettedPodsMap NodeToPodsMap) WebSocketTargettedPodsMessage {
-	return WebSocketTargettedPodsMessage{
-		WebSocketMessageMetadata: &WebSocketMessageMetadata{
-			MessageType: WebSocketMessageTypeUpdateTargettedPods,
-		},
-		NodeToTargettedPodsMap: nodeToTargettedPodsMap,
-	}
-}
