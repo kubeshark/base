@@ -165,6 +165,7 @@ func (e *Emitting) Emit(item *OutputChannelItem) {
 
 	if !e.Stream.GetIsIdentifyMode() {
 		item.Id = e.Stream.GetId()
+		e.Stream.IncrementItemCount()
 		e.OutputChannel <- item
 	}
 }
@@ -258,6 +259,7 @@ type TcpStream interface {
 	GetReqResMatchers() []RequestResponseMatcher
 	GetIsTargetted() bool
 	GetIsClosed() bool
+	IncrementItemCount()
 }
 
 type TcpStreamMap interface {
