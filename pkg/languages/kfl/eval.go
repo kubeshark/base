@@ -26,19 +26,19 @@ const LATEST = "latest"
 // bool operand evaluator. Boolean literals falls into this method.
 func boolOperand(operand interface{}) bool {
 	var _operand bool
-	switch operand.(type) {
+	switch operand := operand.(type) {
 	case string:
-		_operand = operand.(string) != ""
+		_operand = operand != ""
 	case bool:
-		_operand = operand.(bool)
+		_operand = operand
 	case int64:
-		_operand = operand.(int64) > 0
+		_operand = operand > 0
 	case float64:
-		_operand = operand.(float64) > 0
+		_operand = operand > 0
 	case nil:
 		_operand = false
 	case []interface{}:
-		_operand = len(operand.([]interface{})) > 0
+		_operand = len(operand) > 0
 	}
 	return _operand
 }
@@ -46,15 +46,15 @@ func boolOperand(operand interface{}) bool {
 // string operand evaluator. String literals falls into this method.
 func stringOperand(operand interface{}) string {
 	var _operand string
-	switch operand.(type) {
+	switch operand := operand.(type) {
 	case string:
-		_operand = operand.(string)
+		_operand = operand
 	case int64:
-		_operand = strconv.FormatInt(operand.(int64), 10)
+		_operand = strconv.FormatInt(operand, 10)
 	case float64:
-		_operand = strconv.FormatFloat(operand.(float64), 'g', 6, 64)
+		_operand = strconv.FormatFloat(operand, 'g', 6, 64)
 	case bool:
-		_operand = strconv.FormatBool(operand.(bool))
+		_operand = strconv.FormatBool(operand)
 	case nil:
 		_operand = "null"
 	}
@@ -64,19 +64,19 @@ func stringOperand(operand interface{}) string {
 // float64 operand evaluator. Any integer or float literal falls into this method.
 func float64Operand(operand interface{}) float64 {
 	var _operand float64
-	switch operand.(type) {
+	switch operand := operand.(type) {
 	case string:
-		if f, err := strconv.ParseFloat(operand.(string), 64); err == nil {
+		if f, err := strconv.ParseFloat(operand, 64); err == nil {
 			_operand = f
 		} else {
 			_operand = 0
 		}
 	case int64:
-		_operand = float64(operand.(int64))
+		_operand = float64(operand)
 	case float64:
-		_operand = operand.(float64)
+		_operand = operand
 	case bool:
-		if operand.(bool) {
+		if operand {
 			_operand = 1.0
 		} else {
 			_operand = 0
@@ -102,15 +102,15 @@ var logicalOperations = map[string]interface{}{
 }
 
 func eql(operand1 interface{}, operand2 interface{}) bool {
-	switch operand1.(type) {
+	switch operand1 := operand1.(type) {
 	case *regexp.Regexp:
-		return operand1.(*regexp.Regexp).MatchString(stringOperand(operand2))
+		return operand1.MatchString(stringOperand(operand2))
 	case []interface{}:
 		switch operand2.(type) {
 		case []interface{}:
 			return reflect.DeepEqual(operand1, operand2)
 		default:
-			for _, i := range operand1.([]interface{}) {
+			for _, i := range operand1 {
 				if stringOperand(i) == stringOperand(operand2) {
 					return true
 				}
@@ -118,11 +118,11 @@ func eql(operand1 interface{}, operand2 interface{}) bool {
 			return false
 		}
 	default:
-		switch operand2.(type) {
+		switch operand2 := operand2.(type) {
 		case *regexp.Regexp:
-			return operand2.(*regexp.Regexp).MatchString(stringOperand(operand1))
+			return operand2.MatchString(stringOperand(operand1))
 		case []interface{}:
-			for _, i := range operand2.([]interface{}) {
+			for _, i := range operand2 {
 				if stringOperand(operand1) == stringOperand(i) {
 					return true
 				}
@@ -135,15 +135,15 @@ func eql(operand1 interface{}, operand2 interface{}) bool {
 }
 
 func neq(operand1 interface{}, operand2 interface{}) bool {
-	switch operand1.(type) {
+	switch operand1 := operand1.(type) {
 	case *regexp.Regexp:
-		return !operand1.(*regexp.Regexp).MatchString(stringOperand(operand2))
+		return !operand1.MatchString(stringOperand(operand2))
 	case []interface{}:
 		switch operand2.(type) {
 		case []interface{}:
 			return !reflect.DeepEqual(operand1, operand2)
 		default:
-			for _, i := range operand1.([]interface{}) {
+			for _, i := range operand1 {
 				if stringOperand(i) == stringOperand(operand2) {
 					return false
 				}
@@ -151,11 +151,11 @@ func neq(operand1 interface{}, operand2 interface{}) bool {
 			return true
 		}
 	default:
-		switch operand2.(type) {
+		switch operand2 := operand2.(type) {
 		case *regexp.Regexp:
-			return !operand2.(*regexp.Regexp).MatchString(stringOperand(operand1))
+			return !operand2.MatchString(stringOperand(operand1))
 		case []interface{}:
-			for _, i := range operand2.([]interface{}) {
+			for _, i := range operand2 {
 				if stringOperand(operand1) == stringOperand(i) {
 					return false
 				}
@@ -195,9 +195,9 @@ func gtr(operand1 interface{}, operand2 interface{}) bool {
 			return false
 		}
 	default:
-		switch operand2.(type) {
+		switch operand2 := operand2.(type) {
 		case []interface{}:
-			for _, i := range operand2.([]interface{}) {
+			for _, i := range operand2 {
 				if float64Operand(operand1) > float64Operand(i) {
 					return true
 				}
@@ -231,9 +231,9 @@ func lss(operand1 interface{}, operand2 interface{}) bool {
 			return false
 		}
 	default:
-		switch operand2.(type) {
+		switch operand2 := operand2.(type) {
 		case []interface{}:
-			for _, i := range operand2.([]interface{}) {
+			for _, i := range operand2 {
 				if float64Operand(operand1) < float64Operand(i) {
 					return true
 				}
@@ -267,9 +267,9 @@ func geq(operand1 interface{}, operand2 interface{}) bool {
 			return false
 		}
 	default:
-		switch operand2.(type) {
+		switch operand2 := operand2.(type) {
 		case []interface{}:
-			for _, i := range operand2.([]interface{}) {
+			for _, i := range operand2 {
 				if float64Operand(operand1) >= float64Operand(i) {
 					return true
 				}
@@ -303,9 +303,9 @@ func leq(operand1 interface{}, operand2 interface{}) bool {
 			return false
 		}
 	default:
-		switch operand2.(type) {
+		switch operand2 := operand2.(type) {
 		case []interface{}:
-			for _, i := range operand2.([]interface{}) {
+			for _, i := range operand2 {
 				if float64Operand(operand1) <= float64Operand(i) {
 					return true
 				}
@@ -391,8 +391,9 @@ func xml(args ...interface{}) (interface{}, interface{}) {
 		return args[0], false
 	}
 
-	result, err := mv.ValuesForPath(xmlPath)
-	if len(result) < 1 {
+	var result []interface{}
+	result, err = mv.ValuesForPath(xmlPath)
+	if err != nil || len(result) < 1 {
 		return args[0], false
 	}
 
@@ -424,7 +425,10 @@ func redactXml(obj interface{}, path string) (xmlValue []byte, err error) {
 		return
 	}
 
-	mv.SetValueForPath(REDACTED, path)
+	err = mv.SetValueForPath(REDACTED, path)
+	if err != nil {
+		return
+	}
 	xmlValue, err = mv.Xml()
 	if len(nextXML) > 2 && nextXML[0:2] == "<?" {
 		scanner := bufio.NewScanner(strings.NewReader(nextXML))
@@ -459,7 +463,7 @@ func redactRecursively(obj interface{}, paths []string) (newObj interface{}, err
 			var xmlValue []byte
 			xmlValue, err = redactXml(result[0], xmlPaths[1])
 
-			jsonPath.Set(newObj, string(xmlValue))
+			err = jsonPath.Set(newObj, string(xmlValue))
 			return
 		}
 
@@ -496,7 +500,7 @@ func redactRecursively(obj interface{}, paths []string) (newObj interface{}, err
 				newValue = base64.StdEncoding.EncodeToString([]byte(newValue))
 			}
 
-			jsonPath.Set(newObj, newValue)
+			err = jsonPath.Set(newObj, newValue)
 			return
 		}
 
@@ -513,11 +517,11 @@ func redactRecursively(obj interface{}, paths []string) (newObj interface{}, err
 				buf = frag.Append(buf, false, true)
 				// Instead compare the field names directly by walking the object.
 				if string(buf) == ref {
-					path.Set(newObj, REDACTED)
+					err = path.Set(newObj, REDACTED)
 				}
 			})
 		} else {
-			jsonPath.Set(newObj, REDACTED)
+			err = jsonPath.Set(newObj, REDACTED)
 		}
 	}
 	return
@@ -673,14 +677,14 @@ func evalUnary(unar *Unary, obj interface{}) (v interface{}, newObj interface{},
 		if err != nil || collapse {
 			return
 		}
-		switch v.(type) {
+		switch vx := v.(type) {
 		case bool:
 			if unar.Op == "!" {
-				v = !v.(bool)
+				v = !vx
 			}
 		case float64:
 			if unar.Op == "-" {
-				v = -v.(float64)
+				v = -vx
 			}
 		}
 	} else {
