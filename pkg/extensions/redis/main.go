@@ -53,9 +53,9 @@ func (d dissecting) Dissect(b *bufio.Reader, reader api.TcpReader, options *api.
 		}
 
 		if reader.GetIsClient() {
-			err = handleClientStream(reader.GetReadProgress(), reader.GetParent().GetOrigin(), reader.GetTcpID(), reader.GetCounterPair(), reader.GetCaptureTime(), reader.GetEmitter(), redisPacket, reqResMatcher)
+			err = handleClientStream(reader.GetReadProgress(), reader.GetTcpID(), reader.GetCounterPair(), reader.GetCaptureTime(), reader.GetEmitter(), redisPacket, reqResMatcher)
 		} else {
-			err = handleServerStream(reader.GetReadProgress(), reader.GetParent().GetOrigin(), reader.GetTcpID(), reader.GetCounterPair(), reader.GetCaptureTime(), reader.GetEmitter(), redisPacket, reqResMatcher)
+			err = handleServerStream(reader.GetReadProgress(), reader.GetTcpID(), reader.GetCounterPair(), reader.GetCaptureTime(), reader.GetEmitter(), redisPacket, reqResMatcher)
 		}
 
 		if err != nil {
@@ -76,7 +76,6 @@ func (d dissecting) Analyze(item *api.OutputChannelItem, resolvedSource string, 
 	}
 	return &api.Entry{
 		Protocol: protocol.ProtocolSummary,
-		Capture:  item.Capture,
 		Source: &api.TCP{
 			Name: resolvedSource,
 			IP:   item.ConnectionInfo.ClientIP,
@@ -121,7 +120,7 @@ func (d dissecting) Summarize(entry *api.Entry) *api.BaseEntry {
 	return &api.BaseEntry{
 		Id:           entry.Id,
 		Protocol:     *protocolsMap[entry.Protocol.ToString()],
-		Capture:      entry.Capture,
+		Tls:          entry.Tls,
 		Summary:      summary,
 		SummaryQuery: summaryQuery,
 		Status:       status,

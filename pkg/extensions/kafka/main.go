@@ -49,7 +49,7 @@ func (d dissecting) Dissect(b *bufio.Reader, reader api.TcpReader, options *api.
 			}
 			reader.GetParent().SetProtocol(&_protocol)
 		} else {
-			err := ReadResponse(b, reader.GetParent().GetOrigin(), reader.GetTcpID(), reader.GetCounterPair(), reader.GetCaptureTime(), reader.GetEmitter(), reqResMatcher)
+			err := ReadResponse(b, reader.GetTcpID(), reader.GetCounterPair(), reader.GetCaptureTime(), reader.GetEmitter(), reqResMatcher)
 			if err != nil {
 				return err
 			}
@@ -68,7 +68,6 @@ func (d dissecting) Analyze(item *api.OutputChannelItem, resolvedSource string, 
 	}
 	return &api.Entry{
 		Protocol: _protocol.ProtocolSummary,
-		Capture:  item.Capture,
 		Source: &api.TCP{
 			Name: resolvedSource,
 			IP:   item.ConnectionInfo.ClientIP,
@@ -193,7 +192,7 @@ func (d dissecting) Summarize(entry *api.Entry) *api.BaseEntry {
 	return &api.BaseEntry{
 		Id:           entry.Id,
 		Protocol:     *protocolsMap[entry.Protocol.ToString()],
-		Capture:      entry.Capture,
+		Tls:          entry.Tls,
 		Summary:      summary,
 		SummaryQuery: summaryQuery,
 		Status:       status,

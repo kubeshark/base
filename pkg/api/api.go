@@ -59,16 +59,6 @@ type Extension struct {
 	Dissector Dissector
 }
 
-type Capture string
-
-const (
-	UndefinedCapture Capture = ""
-	Pcap             Capture = "pcap"
-	Envoy            Capture = "envoy"
-	Linkerd          Capture = "linkerd"
-	Ebpf             Capture = "ebpf"
-)
-
 type ConnectionInfo struct {
 	ClientIP   string
 	ClientPort string
@@ -107,7 +97,6 @@ type OutputChannelItem struct {
 	// `Protocol` is modified in later stages of data propagation. Therefore, it's not a pointer.
 	Id             string
 	Protocol       Protocol
-	Capture        Capture
 	Timestamp      int64
 	ConnectionInfo *ConnectionInfo
 	Pair           *RequestResponsePair
@@ -173,7 +162,7 @@ func (e *Emitting) Emit(item *OutputChannelItem) {
 type Entry struct {
 	Id           string                 `json:"id"`
 	Protocol     ProtocolSummary        `json:"protocol"`
-	Capture      Capture                `json:"capture"`
+	Tls          bool                   `json:"tls"`
 	Source       *TCP                   `json:"src"`
 	Destination  *TCP                   `json:"dst"`
 	Namespace    string                 `json:"namespace"`
@@ -197,7 +186,7 @@ type EntryWrapper struct {
 type BaseEntry struct {
 	Id           string   `json:"id"`
 	Protocol     Protocol `json:"proto,omitempty"`
-	Capture      Capture  `json:"capture"`
+	Tls          bool     `json:"tls"`
 	Summary      string   `json:"summary,omitempty"`
 	SummaryQuery string   `json:"summaryQuery,omitempty"`
 	Status       int      `json:"status"`
@@ -255,7 +244,6 @@ type TcpStream interface {
 	SetAsEmittable()
 	GetPcapId() string
 	GetIsIdentifyMode() bool
-	GetOrigin() Capture
 	GetReqResMatchers() []RequestResponseMatcher
 	GetIsTargetted() bool
 	GetIsClosed() bool

@@ -41,7 +41,6 @@ func (matcher *requestResponseMatcher) emitEvent(isRequest bool, ident string, m
 			ServerPort: reader.GetTcpID().DstPort,
 			IsOutgoing: true,
 		}
-		item.Capture = reader.GetParent().GetOrigin()
 		reader.GetEmitter().Emit(item)
 	}
 }

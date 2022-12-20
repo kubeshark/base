@@ -43,10 +43,6 @@ func (t *tcpStream) SetAsEmittable() {
 	t.emittable = true
 }
 
-func (t *tcpStream) GetOrigin() api.Capture {
-	return t.origin
-}
-
 func (t *tcpStream) GetReqResMatchers() []api.RequestResponseMatcher {
 	return t.reqResMatchers
 }

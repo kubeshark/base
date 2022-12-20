@@ -272,7 +272,6 @@ func (d dissecting) Analyze(item *api.OutputChannelItem, resolvedSource string, 
 	resDetails["method"] = response["method"]
 	return &api.Entry{
 		Protocol: protocol.ProtocolSummary,
-		Capture:  item.Capture,
 		Source: &api.TCP{
 			Name: resolvedSource,
 			IP:   item.ConnectionInfo.ClientIP,
@@ -352,7 +351,7 @@ func (d dissecting) Summarize(entry *api.Entry) *api.BaseEntry {
 	return &api.BaseEntry{
 		Id:           entry.Id,
 		Protocol:     *protocolsMap[entry.Protocol.ToString()],
-		Capture:      entry.Capture,
+		Tls:          entry.Tls,
 		Summary:      summary,
 		SummaryQuery: summaryQuery,
 		Status:       0,

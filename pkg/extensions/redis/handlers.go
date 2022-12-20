@@ -7,7 +7,7 @@ import (
 	"github.com/kubeshark/base/pkg/api"
 )
 
-func handleClientStream(progress *api.ReadProgress, capture api.Capture, tcpID *api.TcpID, counterPair *api.CounterPair, captureTime time.Time, emitter api.Emitter, request *RedisPacket, reqResMatcher *requestResponseMatcher) error {
+func handleClientStream(progress *api.ReadProgress, tcpID *api.TcpID, counterPair *api.CounterPair, captureTime time.Time, emitter api.Emitter, request *RedisPacket, reqResMatcher *requestResponseMatcher) error {
 	counterPair.Lock()
 	counterPair.Request++
 	requestCounter := counterPair.Request
@@ -24,7 +24,6 @@ func handleClientStream(progress *api.ReadProgress, capture api.Capture, tcpID *
 
 	item := reqResMatcher.registerRequest(ident, request, captureTime, progress.Current())
 	if item != nil {
-		item.Capture = capture
 		item.ConnectionInfo = &api.ConnectionInfo{
 			ClientIP:   tcpID.SrcIP,
 			ClientPort: tcpID.SrcPort,
@@ -37,7 +36,7 @@ func handleClientStream(progress *api.ReadProgress, capture api.Capture, tcpID *
 	return nil
 }
 
-func handleServerStream(progress *api.ReadProgress, capture api.Capture, tcpID *api.TcpID, counterPair *api.CounterPair, captureTime time.Time, emitter api.Emitter, response *RedisPacket, reqResMatcher *requestResponseMatcher) error {
+func handleServerStream(progress *api.ReadProgress, tcpID *api.TcpID, counterPair *api.CounterPair, captureTime time.Time, emitter api.Emitter, response *RedisPacket, reqResMatcher *requestResponseMatcher) error {
 	counterPair.Lock()
 	counterPair.Response++
 	responseCounter := counterPair.Response
@@ -54,7 +53,6 @@ func handleServerStream(progress *api.ReadProgress, capture api.Capture, tcpID *
 
 	item := reqResMatcher.registerResponse(ident, response, captureTime, progress.Current())
 	if item != nil {
-		item.Capture = capture
 		item.ConnectionInfo = &api.ConnectionInfo{
 			ClientIP:   tcpID.DstIP,
 			ClientPort: tcpID.DstPort,

@@ -164,7 +164,7 @@ func (d dissecting) Dissect(b *bufio.Reader, reader api.TcpReader, options *api.
 		}
 
 		if isHTTP2 {
-			err = handleHTTP2Stream(http2Assembler, reader.GetReadProgress(), reader.GetParent().GetOrigin(), reader.GetTcpID(), reader.GetCaptureTime(), reader.GetEmitter(), options, reqResMatcher)
+			err = handleHTTP2Stream(http2Assembler, reader.GetReadProgress(), reader.GetTcpID(), reader.GetCaptureTime(), reader.GetEmitter(), options, reqResMatcher)
 			if err == io.EOF || err == io.ErrUnexpectedEOF {
 				break
 			} else if err != nil {
@@ -173,7 +173,7 @@ func (d dissecting) Dissect(b *bufio.Reader, reader api.TcpReader, options *api.
 			reader.GetParent().SetProtocol(&http11protocol)
 		} else if reader.GetIsClient() {
 			var req *http.Request
-			switchingProtocolsHTTP2, req, err = handleHTTP1ClientStream(b, reader.GetReadProgress(), reader.GetParent().GetOrigin(), reader.GetTcpID(), reader.GetCounterPair(), reader.GetCaptureTime(), reader.GetEmitter(), options, reqResMatcher)
+			switchingProtocolsHTTP2, req, err = handleHTTP1ClientStream(b, reader.GetReadProgress(), reader.GetTcpID(), reader.GetCounterPair(), reader.GetCaptureTime(), reader.GetEmitter(), options, reqResMatcher)
 			if err == io.EOF || err == io.ErrUnexpectedEOF {
 				break
 			} else if err != nil {
@@ -200,12 +200,11 @@ func (d dissecting) Dissect(b *bufio.Reader, reader api.TcpReader, options *api.
 						ServerPort: reader.GetTcpID().DstPort,
 						IsOutgoing: true,
 					}
-					item.Capture = reader.GetParent().GetOrigin()
 					filterAndEmit(item, reader.GetEmitter(), options)
 				}
 			}
 		} else {
-			switchingProtocolsHTTP2, err = handleHTTP1ServerStream(b, reader.GetReadProgress(), reader.GetParent().GetOrigin(), reader.GetTcpID(), reader.GetCounterPair(), reader.GetCaptureTime(), reader.GetEmitter(), options, reqResMatcher)
+			switchingProtocolsHTTP2, err = handleHTTP1ServerStream(b, reader.GetReadProgress(), reader.GetTcpID(), reader.GetCounterPair(), reader.GetCaptureTime(), reader.GetEmitter(), options, reqResMatcher)
 			if err == io.EOF || err == io.ErrUnexpectedEOF {
 				break
 			} else if err != nil {
@@ -296,7 +295,6 @@ func (d dissecting) Analyze(item *api.OutputChannelItem, resolvedSource string, 
 
 	return &api.Entry{
 		Protocol: item.Protocol.ProtocolSummary,
-		Capture:  item.Capture,
 		Source: &api.TCP{
 			Name: resolvedSource,
 			IP:   item.ConnectionInfo.ClientIP,
@@ -330,7 +328,7 @@ func (d dissecting) Summarize(entry *api.Entry) *api.BaseEntry {
 	return &api.BaseEntry{
 		Id:           entry.Id,
 		Protocol:     *protocolsMap[entry.Protocol.ToString()],
-		Capture:      entry.Capture,
+		Tls:          entry.Tls,
 		Summary:      summary,
 		SummaryQuery: summaryQuery,
 		Status:       status,
