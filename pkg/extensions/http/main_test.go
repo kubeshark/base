@@ -118,7 +118,7 @@ func TestDissect(t *testing.T) {
 			DstPort: "2",
 		}
 		reqResMatcher := dissector.NewResponseRequestMatcher()
-		stream := NewTcpStream(api.Pcap)
+		stream := NewTcpStream()
 		reader := NewTcpReader(
 			&api.ReadProgress{},
 			"",

@@ -116,7 +116,7 @@ func TestDissect(t *testing.T) {
 		}
 		reqResMatcher := dissector.NewResponseRequestMatcher()
 		reqResMatcher.SetMaxTry(10)
-		stream := NewTcpStream(api.Pcap)
+		stream := NewTcpStream()
 		reader := NewTcpReader(
 			&api.ReadProgress{},
 			"",

@@ -14,15 +14,12 @@ type tcpStream struct {
 	emittable      bool
 	isClosed       bool
 	isTargetted    bool
-	origin         api.Capture
 	reqResMatchers []api.RequestResponseMatcher
 	sync.Mutex
 }
 
-func NewTcpStream(capture api.Capture) api.TcpStream {
-	return &tcpStream{
-		origin: capture,
-	}
+func NewTcpStream() api.TcpStream {
+	return &tcpStream{}
 }
 
 func (t *tcpStream) SetProtocol(protocol *api.Protocol) {}
