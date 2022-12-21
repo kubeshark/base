@@ -17,6 +17,10 @@ func Apply(b []byte, query string) (truth bool, record string, err error) {
 	var expr *Expression
 	// Prepare the query.
 	expr, _, err = PrepareQuery(query)
+	if err != nil {
+		log.Error().Err(err).Send()
+		return
+	}
 
 	truth, record, err = Eval(expr, string(b))
 	if err != nil {
