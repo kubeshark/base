@@ -15,6 +15,19 @@ import (
 // - Error if any step ends with an error, otherwise nil.
 func Apply(b []byte, query string) (truth bool, record string, err error) {
 	var expr *Expression
+	// Prepare the query.
+	expr, _, err = PrepareQuery(query)
+
+	truth, record, err = Eval(expr, string(b))
+	if err != nil {
+		log.Error().Err(err).Msg("Eval error:")
+		return
+	}
+
+	return
+}
+
+func PrepareQuery(query string) (expr *Expression, prop Propagate, err error) {
 	// Expand all macros in the query, if there are any.
 	query, err = ExpandMacros(query)
 	if err != nil {
@@ -29,16 +42,9 @@ func Apply(b []byte, query string) (truth bool, record string, err error) {
 		return
 	}
 
-	_, err = Precompute(expr)
+	prop, err = Precompute(expr)
 	if err != nil {
 		log.Error().Err(err).Msg("Precompute error:")
-		return
-	}
-
-	truth, record, err = Eval(expr, string(b))
-	if err != nil {
-		log.Error().Err(err).Msg("Eval error:")
-		return
 	}
 
 	return

@@ -322,7 +322,7 @@ var dataTimeHelpers = []struct {
 }
 
 func TestEvalTimeHelpers(t *testing.T) {
-	json := fmt.Sprintf(`{"id":114905,"model":"Camaro","brand":{"name":"Chevrolet"},"timestamp":%d}`, time.Now().Add(time.Duration(-2)*time.Second).UnixNano()/int64(time.Millisecond))
+	json := fmt.Sprintf(`{"id":114905,"model":"Camaro","brand":{"name":"Chevrolet"},"timestamp":%d}`, time.Now().UTC().Add(time.Duration(-2)*time.Second).UnixNano()/int64(time.Millisecond))
 	for _, row := range dataTimeHelpers {
 		expr, err := Parse(row.query)
 		if err != nil {

@@ -147,7 +147,7 @@ func computeCallExpression(call *CallExpression, prependPath string, jsonHelperP
 			if len(call.Parameters) > 0 {
 				// We don't alter the record on compile-time. So the second record value is disabled
 				v, _, err := evalExpression(call.Parameters[0].Expression, nil)
-				now := time.Now()
+				now := time.Now().UTC()
 				if err == nil {
 					switch *helper {
 					case "limit":
@@ -181,7 +181,7 @@ func computeCallExpression(call *CallExpression, prependPath string, jsonHelperP
 		// now helper
 		if *_helper == compileTimeEvaluatedHelpers[1] {
 			helper = _helper
-			call.Parameters = []*Parameter{{TimeSet: true, Time: time.Now()}}
+			call.Parameters = []*Parameter{{TimeSet: true, Time: time.Now().UTC()}}
 		}
 	}
 
