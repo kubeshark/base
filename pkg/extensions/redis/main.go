@@ -75,6 +75,8 @@ func (d dissecting) Analyze(item *api.OutputChannelItem, resolvedSource string, 
 		elapsedTime = 0
 	}
 	return &api.Entry{
+		Index:    item.Index,
+		Stream:   item.Stream,
 		Protocol: protocol.ProtocolSummary,
 		Source: &api.TCP{
 			Name: resolvedSource,
@@ -118,7 +120,9 @@ func (d dissecting) Summarize(entry *api.Entry) *api.BaseEntry {
 	}
 
 	return &api.BaseEntry{
-		Id:           entry.Id,
+		Id:           fmt.Sprintf("%s/%s-%d", entry.Worker, entry.Stream, entry.Index),
+		Stream:       entry.Stream,
+		Worker:       entry.Worker,
 		Protocol:     *protocolsMap[entry.Protocol.ToString()],
 		Tls:          entry.Tls,
 		Summary:      summary,
@@ -130,7 +134,7 @@ func (d dissecting) Summarize(entry *api.Entry) *api.BaseEntry {
 		Timestamp:    entry.Timestamp,
 		Source:       entry.Source,
 		Destination:  entry.Destination,
-		IsOutgoing:   entry.Outgoing,
+		Outgoing:     entry.Outgoing,
 		Latency:      entry.ElapsedTime,
 	}
 }

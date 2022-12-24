@@ -1,7 +1,6 @@
 package amqp
 
 import (
-	"fmt"
 	"sync"
 
 	"github.com/kubeshark/base/pkg/api"
@@ -25,7 +24,11 @@ func NewTcpStream() api.TcpStream {
 func (t *tcpStream) SetProtocol(protocol *api.Protocol) {}
 
 func (t *tcpStream) GetPcapId() string {
-	return fmt.Sprintf("%s-%d", t.pcapId, t.itemCount)
+	return t.pcapId
+}
+
+func (t *tcpStream) GetIndex() int64 {
+	return t.itemCount
 }
 
 func (t *tcpStream) GetIsIdentifyMode() bool {

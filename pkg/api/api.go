@@ -93,9 +93,11 @@ type RequestResponsePair struct {
 	Response GenericMessage `json:"response"`
 }
 
+// {Stream}-{Index} uniquely identifies an item
+// `Protocol` is modified in later stages of data propagation. Therefore, it's not a pointer.
 type OutputChannelItem struct {
-	// `Protocol` is modified in later stages of data propagation. Therefore, it's not a pointer.
-	Id             string
+	Index          int64
+	Stream         string
 	Protocol       Protocol
 	Timestamp      int64
 	ConnectionInfo *ConnectionInfo
@@ -153,14 +155,20 @@ func (e *Emitting) Emit(item *OutputChannelItem) {
 	e.Stream.SetAsEmittable()
 
 	if !e.Stream.GetIsIdentifyMode() {
-		item.Id = e.Stream.GetPcapId()
+		item.Stream = e.Stream.GetPcapId()
+		item.Index = e.Stream.GetIndex()
 		e.Stream.IncrementItemCount()
 		e.OutputChannel <- item
 	}
 }
 
+// {Worker}/{Stream}-{Index} uniquely identifies an item
 type Entry struct {
 	Id           string                 `json:"id"`
+	Index        int64                  `json:"index"`
+	Stream       string                 `json:"stream"`
+	Worker       string                 `json:"worker"`
+	Node         string                 `json:"node"`
 	Protocol     ProtocolSummary        `json:"protocol"`
 	Tls          bool                   `json:"tls"`
 	Source       *TCP                   `json:"src"`
@@ -176,6 +184,10 @@ type Entry struct {
 	ElapsedTime  int64                  `json:"elapsedTime"`
 }
 
+func (e *Entry) BuildId() {
+	e.Id = fmt.Sprintf("%s/%s-%d", e.Worker, e.Stream, e.Index)
+}
+
 type EntryWrapper struct {
 	Protocol       Protocol   `json:"protocol"`
 	Representation string     `json:"representation"`
@@ -183,8 +195,11 @@ type EntryWrapper struct {
 	Base           *BaseEntry `json:"base"`
 }
 
+// {Worker}/{Id} uniquely identifies an item
 type BaseEntry struct {
 	Id           string   `json:"id"`
+	Stream       string   `json:"stream"`
+	Worker       string   `json:"worker"`
 	Protocol     Protocol `json:"proto,omitempty"`
 	Tls          bool     `json:"tls"`
 	Summary      string   `json:"summary,omitempty"`
@@ -196,7 +211,7 @@ type BaseEntry struct {
 	Timestamp    int64    `json:"timestamp,omitempty"`
 	Source       *TCP     `json:"src"`
 	Destination  *TCP     `json:"dst"`
-	IsOutgoing   bool     `json:"isOutgoing,omitempty"`
+	Outgoing     bool     `json:"outgoing"`
 	Latency      int64    `json:"latency"`
 }
 
@@ -243,6 +258,7 @@ type TcpStream interface {
 	SetProtocol(protocol *Protocol)
 	SetAsEmittable()
 	GetPcapId() string
+	GetIndex() int64
 	GetIsIdentifyMode() bool
 	GetReqResMatchers() []RequestResponseMatcher
 	GetIsTargetted() bool
