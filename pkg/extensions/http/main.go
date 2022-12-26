@@ -14,11 +14,9 @@ import (
 )
 
 var http10protocol = api.Protocol{
-	ProtocolSummary: api.ProtocolSummary{
-		Name:         "http",
-		Version:      "1.0",
-		Abbreviation: "HTTP",
-	},
+	Name:            "http",
+	Version:         "1.0",
+	Abbreviation:    "HTTP",
 	LongName:        "Hypertext Transfer Protocol -- HTTP/1.0",
 	Macro:           "http",
 	BackgroundColor: "#326de6",
@@ -30,11 +28,9 @@ var http10protocol = api.Protocol{
 }
 
 var http11protocol = api.Protocol{
-	ProtocolSummary: api.ProtocolSummary{
-		Name:         "http",
-		Version:      "1.1",
-		Abbreviation: "HTTP",
-	},
+	Name:            "http",
+	Version:         "1.1",
+	Abbreviation:    "HTTP",
 	LongName:        "Hypertext Transfer Protocol -- HTTP/1.1",
 	Macro:           "http",
 	BackgroundColor: "#326de6",
@@ -46,11 +42,9 @@ var http11protocol = api.Protocol{
 }
 
 var http2Protocol = api.Protocol{
-	ProtocolSummary: api.ProtocolSummary{
-		Name:         "http",
-		Version:      "2.0",
-		Abbreviation: "HTTP/2",
-	},
+	Name:            "http",
+	Version:         "2.0",
+	Abbreviation:    "HTTP/2",
 	LongName:        "Hypertext Transfer Protocol Version 2 (HTTP/2)",
 	Macro:           "http2",
 	BackgroundColor: "#244c5a",
@@ -62,11 +56,9 @@ var http2Protocol = api.Protocol{
 }
 
 var grpcProtocol = api.Protocol{
-	ProtocolSummary: api.ProtocolSummary{
-		Name:         "http",
-		Version:      "2.0",
-		Abbreviation: "gRPC",
-	},
+	Name:            "http",
+	Version:         "2.0",
+	Abbreviation:    "gRPC",
 	LongName:        "Hypertext Transfer Protocol Version 2 (HTTP/2) [ gRPC over HTTP/2 ]",
 	Macro:           "grpc",
 	BackgroundColor: "#244c5a",
@@ -78,11 +70,9 @@ var grpcProtocol = api.Protocol{
 }
 
 var graphQL1Protocol = api.Protocol{
-	ProtocolSummary: api.ProtocolSummary{
-		Name:         "http",
-		Version:      "1.1",
-		Abbreviation: "GQL",
-	},
+	Name:            "http",
+	Version:         "1.1",
+	Abbreviation:    "GQL",
 	LongName:        "Hypertext Transfer Protocol -- HTTP/1.1 [ GraphQL over HTTP/1.1 ]",
 	Macro:           "gql",
 	BackgroundColor: "#e10098",
@@ -94,11 +84,9 @@ var graphQL1Protocol = api.Protocol{
 }
 
 var graphQL2Protocol = api.Protocol{
-	ProtocolSummary: api.ProtocolSummary{
-		Name:         "http",
-		Version:      "2.0",
-		Abbreviation: "GQL",
-	},
+	Name:            "http",
+	Version:         "2.0",
+	Abbreviation:    "GQL",
 	LongName:        "Hypertext Transfer Protocol Version 2 (HTTP/2) [ GraphQL over HTTP/2 ]",
 	Macro:           "gql",
 	BackgroundColor: "#e10098",
@@ -107,15 +95,6 @@ var graphQL2Protocol = api.Protocol{
 	ReferenceLink:   "https://graphql.org/learn/serving-over-http/",
 	Ports:           []string{"80", "443", "8080", "50051"},
 	Priority:        0,
-}
-
-var protocolsMap = map[string]*api.Protocol{
-	http10protocol.ToString():   &http10protocol,
-	http11protocol.ToString():   &http11protocol,
-	http2Protocol.ToString():    &http2Protocol,
-	grpcProtocol.ToString():     &grpcProtocol,
-	graphQL1Protocol.ToString(): &graphQL1Protocol,
-	graphQL2Protocol.ToString(): &graphQL2Protocol,
 }
 
 const (
@@ -127,10 +106,6 @@ type dissecting string
 
 func (d dissecting) Register(extension *api.Extension) {
 	extension.Protocol = &http11protocol
-}
-
-func (d dissecting) GetProtocols() map[string]*api.Protocol {
-	return protocolsMap
 }
 
 func (d dissecting) Dissect(b *bufio.Reader, reader api.TcpReader) error {
@@ -296,7 +271,7 @@ func (d dissecting) Analyze(item *api.OutputChannelItem, resolvedSource string, 
 	return &api.Entry{
 		Index:    item.Index,
 		Stream:   item.Stream,
-		Protocol: item.Protocol.ProtocolSummary,
+		Protocol: item.Protocol,
 		Source: &api.TCP{
 			Name: resolvedSource,
 			IP:   item.ConnectionInfo.ClientIP,
@@ -331,7 +306,7 @@ func (d dissecting) Summarize(entry *api.Entry) *api.BaseEntry {
 		Id:           fmt.Sprintf("%s/%s-%d", entry.Worker, entry.Stream, entry.Index),
 		Stream:       entry.Stream,
 		Worker:       entry.Worker,
-		Protocol:     *protocolsMap[entry.Protocol.ToString()],
+		Protocol:     entry.Protocol,
 		Tls:          entry.Tls,
 		Summary:      summary,
 		SummaryQuery: summaryQuery,

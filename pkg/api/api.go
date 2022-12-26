@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"net"
-	"strings"
 	"sync"
 	"time"
 
@@ -16,27 +15,10 @@ const UnknownNamespace = ""
 var UnknownIp = net.IP{0, 0, 0, 0}
 var UnknownPort uint16 = 0
 
-type ProtocolSummary struct {
-	Name         string `json:"name"`
-	Version      string `json:"version"`
-	Abbreviation string `json:"abbr"`
-}
-
-func (protocol *ProtocolSummary) ToString() string {
-	return fmt.Sprintf("%s?%s?%s", protocol.Name, protocol.Version, protocol.Abbreviation)
-}
-
-func GetProtocolSummary(inputString string) *ProtocolSummary {
-	splitted := strings.SplitN(inputString, "?", 3)
-	return &ProtocolSummary{
-		Name:         splitted[0],
-		Version:      splitted[1],
-		Abbreviation: splitted[2],
-	}
-}
-
 type Protocol struct {
-	ProtocolSummary
+	Name            string   `json:"name"`
+	Version         string   `json:"version"`
+	Abbreviation    string   `json:"abbr"`
 	LongName        string   `json:"longName"`
 	Macro           string   `json:"macro"`
 	BackgroundColor string   `json:"backgroundColor"`
@@ -126,7 +108,6 @@ func (p *ReadProgress) Reset() {
 
 type Dissector interface {
 	Register(*Extension)
-	GetProtocols() map[string]*Protocol
 	Dissect(b *bufio.Reader, reader TcpReader) error
 	Analyze(item *OutputChannelItem, resolvedSource string, resolvedDestination string, namespace string) *Entry
 	Summarize(entry *Entry) *BaseEntry
@@ -169,7 +150,7 @@ type Entry struct {
 	Stream       string                 `json:"stream"`
 	Worker       string                 `json:"worker"`
 	Node         string                 `json:"node"`
-	Protocol     ProtocolSummary        `json:"protocol"`
+	Protocol     Protocol               `json:"protocol"`
 	Tls          bool                   `json:"tls"`
 	Source       *TCP                   `json:"src"`
 	Destination  *TCP                   `json:"dst"`

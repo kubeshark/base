@@ -10,11 +10,9 @@ import (
 )
 
 var protocol = api.Protocol{
-	ProtocolSummary: api.ProtocolSummary{
-		Name:         "redis",
-		Version:      "3.x",
-		Abbreviation: "REDIS",
-	},
+	Name:            "redis",
+	Version:         "3.x",
+	Abbreviation:    "REDIS",
 	LongName:        "Redis Serialization Protocol",
 	Macro:           "redis",
 	BackgroundColor: "#a41e11",
@@ -25,18 +23,10 @@ var protocol = api.Protocol{
 	Priority:        3,
 }
 
-var protocolsMap = map[string]*api.Protocol{
-	protocol.ToString(): &protocol,
-}
-
 type dissecting string
 
 func (d dissecting) Register(extension *api.Extension) {
 	extension.Protocol = &protocol
-}
-
-func (d dissecting) GetProtocols() map[string]*api.Protocol {
-	return protocolsMap
 }
 
 func (d dissecting) Dissect(b *bufio.Reader, reader api.TcpReader) error {
@@ -77,7 +67,7 @@ func (d dissecting) Analyze(item *api.OutputChannelItem, resolvedSource string, 
 	return &api.Entry{
 		Index:    item.Index,
 		Stream:   item.Stream,
-		Protocol: protocol.ProtocolSummary,
+		Protocol: protocol,
 		Source: &api.TCP{
 			Name: resolvedSource,
 			IP:   item.ConnectionInfo.ClientIP,
@@ -123,7 +113,7 @@ func (d dissecting) Summarize(entry *api.Entry) *api.BaseEntry {
 		Id:           fmt.Sprintf("%s/%s-%d", entry.Worker, entry.Stream, entry.Index),
 		Stream:       entry.Stream,
 		Worker:       entry.Worker,
-		Protocol:     *protocolsMap[entry.Protocol.ToString()],
+		Protocol:     entry.Protocol,
 		Tls:          entry.Tls,
 		Summary:      summary,
 		SummaryQuery: summaryQuery,

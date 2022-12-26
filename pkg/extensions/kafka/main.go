@@ -10,11 +10,9 @@ import (
 )
 
 var _protocol = api.Protocol{
-	ProtocolSummary: api.ProtocolSummary{
-		Name:         "kafka",
-		Version:      "12",
-		Abbreviation: "KAFKA",
-	},
+	Name:            "kafka",
+	Version:         "12",
+	Abbreviation:    "KAFKA",
 	LongName:        "Apache Kafka Protocol",
 	Macro:           "kafka",
 	BackgroundColor: "#000000",
@@ -25,18 +23,10 @@ var _protocol = api.Protocol{
 	Priority:        2,
 }
 
-var protocolsMap = map[string]*api.Protocol{
-	_protocol.ToString(): &_protocol,
-}
-
 type dissecting string
 
 func (d dissecting) Register(extension *api.Extension) {
 	extension.Protocol = &_protocol
-}
-
-func (d dissecting) GetProtocols() map[string]*api.Protocol {
-	return protocolsMap
 }
 
 func (d dissecting) Dissect(b *bufio.Reader, reader api.TcpReader) error {
@@ -69,7 +59,7 @@ func (d dissecting) Analyze(item *api.OutputChannelItem, resolvedSource string, 
 	return &api.Entry{
 		Index:    item.Index,
 		Stream:   item.Stream,
-		Protocol: _protocol.ProtocolSummary,
+		Protocol: _protocol,
 		Source: &api.TCP{
 			Name: resolvedSource,
 			IP:   item.ConnectionInfo.ClientIP,
@@ -195,7 +185,7 @@ func (d dissecting) Summarize(entry *api.Entry) *api.BaseEntry {
 		Id:           fmt.Sprintf("%s/%s-%d", entry.Worker, entry.Stream, entry.Index),
 		Stream:       entry.Stream,
 		Worker:       entry.Worker,
-		Protocol:     *protocolsMap[entry.Protocol.ToString()],
+		Protocol:     entry.Protocol,
 		Tls:          entry.Tls,
 		Summary:      summary,
 		SummaryQuery: summaryQuery,
