@@ -41,7 +41,7 @@ func (d dissecting) GetProtocols() map[string]*api.Protocol {
 	return protocolsMap
 }
 
-func (d dissecting) Dissect(b *bufio.Reader, reader api.TcpReader, options *api.TrafficFilteringOptions) error {
+func (d dissecting) Dissect(b *bufio.Reader, reader api.TcpReader) error {
 	r := AmqpReader{b}
 
 	var remaining int

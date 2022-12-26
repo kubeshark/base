@@ -70,10 +70,6 @@ func TestDissect(t *testing.T) {
 		log.Fatal(err)
 	}
 
-	options := &api.TrafficFilteringOptions{
-		IgnoredUserAgents: []string{},
-	}
-
 	for _, _path := range paths {
 		basePath := _path[:len(_path)-8]
 
@@ -132,7 +128,7 @@ func TestDissect(t *testing.T) {
 			counterPair,
 			reqResMatcher,
 		)
-		err = dissector.Dissect(bufferClient, reader, options)
+		err = dissector.Dissect(bufferClient, reader)
 		if err != nil && err != io.EOF && err != io.ErrUnexpectedEOF {
 			panic(err)
 		}
@@ -163,7 +159,7 @@ func TestDissect(t *testing.T) {
 			counterPair,
 			reqResMatcher,
 		)
-		err = dissector.Dissect(bufferServer, reader, options)
+		err = dissector.Dissect(bufferServer, reader)
 		if err != nil && err != io.EOF && err != io.ErrUnexpectedEOF {
 			panic(err)
 		}

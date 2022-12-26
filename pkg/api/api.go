@@ -127,7 +127,7 @@ func (p *ReadProgress) Reset() {
 type Dissector interface {
 	Register(*Extension)
 	GetProtocols() map[string]*Protocol
-	Dissect(b *bufio.Reader, reader TcpReader, options *TrafficFilteringOptions) error
+	Dissect(b *bufio.Reader, reader TcpReader) error
 	Analyze(item *OutputChannelItem, resolvedSource string, resolvedDestination string, namespace string) *Entry
 	Summarize(entry *Entry) *BaseEntry
 	Represent(request map[string]interface{}, response map[string]interface{}) (object []byte, err error)

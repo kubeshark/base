@@ -12,38 +12,7 @@ import (
 	"github.com/kubeshark/base/pkg/api"
 )
 
-func filterAndEmit(item *api.OutputChannelItem, emitter api.Emitter, options *api.TrafficFilteringOptions) {
-	if IsIgnoredUserAgent(item, options) {
-		return
-	}
-
-	replaceForwardedFor(item)
-
-	emitter.Emit(item)
-}
-
-func replaceForwardedFor(item *api.OutputChannelItem) {
-	if item.Protocol.Name != "http" {
-		return
-	}
-
-	request := item.Pair.Request.Payload.(HTTPPayload).Data.(*http.Request)
-
-	forwardedFor := request.Header.Get("X-Forwarded-For")
-	if forwardedFor == "" {
-		return
-	}
-
-	ips := strings.Split(forwardedFor, ",")
-	lastIP := strings.TrimSpace(ips[0])
-
-	item.ConnectionInfo.ClientIP = lastIP
-	// Erase the port field. Because the proxy terminates the connection from the client, the port that we see here
-	// is not the source port on the client side.
-	item.ConnectionInfo.ClientPort = ""
-}
-
-func handleHTTP2Stream(http2Assembler *Http2Assembler, progress *api.ReadProgress, tcpID *api.TcpID, captureTime time.Time, emitter api.Emitter, options *api.TrafficFilteringOptions, reqResMatcher *requestResponseMatcher) error {
+func handleHTTP2Stream(http2Assembler *Http2Assembler, progress *api.ReadProgress, tcpID *api.TcpID, captureTime time.Time, emitter api.Emitter, reqResMatcher *requestResponseMatcher) error {
 	streamID, messageHTTP1, isGrpc, err := http2Assembler.readMessage()
 	if err != nil {
 		return err
@@ -100,13 +69,13 @@ func handleHTTP2Stream(http2Assembler *Http2Assembler, progress *api.ReadProgres
 		} else {
 			item.Protocol = http2Protocol
 		}
-		filterAndEmit(item, emitter, options)
+		emitter.Emit(item)
 	}
 
 	return nil
 }
 
-func handleHTTP1ClientStream(b *bufio.Reader, progress *api.ReadProgress, tcpID *api.TcpID, counterPair *api.CounterPair, captureTime time.Time, emitter api.Emitter, options *api.TrafficFilteringOptions, reqResMatcher *requestResponseMatcher) (switchingProtocolsHTTP2 bool, req *http.Request, err error) {
+func handleHTTP1ClientStream(b *bufio.Reader, progress *api.ReadProgress, tcpID *api.TcpID, counterPair *api.CounterPair, captureTime time.Time, emitter api.Emitter, reqResMatcher *requestResponseMatcher) (switchingProtocolsHTTP2 bool, req *http.Request, err error) {
 	req, err = http.ReadRequest(b)
 	if err != nil {
 		return
@@ -143,12 +112,12 @@ func handleHTTP1ClientStream(b *bufio.Reader, progress *api.ReadProgress, tcpID 
 			ServerPort: tcpID.DstPort,
 			IsOutgoing: true,
 		}
-		filterAndEmit(item, emitter, options)
+		emitter.Emit(item)
 	}
 	return
 }
 
-func handleHTTP1ServerStream(b *bufio.Reader, progress *api.ReadProgress, tcpID *api.TcpID, counterPair *api.CounterPair, captureTime time.Time, emitter api.Emitter, options *api.TrafficFilteringOptions, reqResMatcher *requestResponseMatcher) (switchingProtocolsHTTP2 bool, err error) {
+func handleHTTP1ServerStream(b *bufio.Reader, progress *api.ReadProgress, tcpID *api.TcpID, counterPair *api.CounterPair, captureTime time.Time, emitter api.Emitter, reqResMatcher *requestResponseMatcher) (switchingProtocolsHTTP2 bool, err error) {
 	var res *http.Response
 	res, err = http.ReadResponse(b, nil)
 	if err != nil {
@@ -186,7 +155,7 @@ func handleHTTP1ServerStream(b *bufio.Reader, progress *api.ReadProgress, tcpID 
 			ServerPort: tcpID.SrcPort,
 			IsOutgoing: false,
 		}
-		filterAndEmit(item, emitter, options)
+		emitter.Emit(item)
 	}
 	return
 }

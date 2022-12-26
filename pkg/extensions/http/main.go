@@ -133,7 +133,7 @@ func (d dissecting) GetProtocols() map[string]*api.Protocol {
 	return protocolsMap
 }
 
-func (d dissecting) Dissect(b *bufio.Reader, reader api.TcpReader, options *api.TrafficFilteringOptions) error {
+func (d dissecting) Dissect(b *bufio.Reader, reader api.TcpReader) error {
 	reqResMatcher := reader.GetReqResMatcher().(*requestResponseMatcher)
 
 	var err error
@@ -164,7 +164,7 @@ func (d dissecting) Dissect(b *bufio.Reader, reader api.TcpReader, options *api.
 		}
 
 		if isHTTP2 {
-			err = handleHTTP2Stream(http2Assembler, reader.GetReadProgress(), reader.GetTcpID(), reader.GetCaptureTime(), reader.GetEmitter(), options, reqResMatcher)
+			err = handleHTTP2Stream(http2Assembler, reader.GetReadProgress(), reader.GetTcpID(), reader.GetCaptureTime(), reader.GetEmitter(), reqResMatcher)
 			if err == io.EOF || err == io.ErrUnexpectedEOF {
 				break
 			} else if err != nil {
@@ -173,7 +173,7 @@ func (d dissecting) Dissect(b *bufio.Reader, reader api.TcpReader, options *api.
 			reader.GetParent().SetProtocol(&http11protocol)
 		} else if reader.GetIsClient() {
 			var req *http.Request
-			switchingProtocolsHTTP2, req, err = handleHTTP1ClientStream(b, reader.GetReadProgress(), reader.GetTcpID(), reader.GetCounterPair(), reader.GetCaptureTime(), reader.GetEmitter(), options, reqResMatcher)
+			switchingProtocolsHTTP2, req, err = handleHTTP1ClientStream(b, reader.GetReadProgress(), reader.GetTcpID(), reader.GetCounterPair(), reader.GetCaptureTime(), reader.GetEmitter(), reqResMatcher)
 			if err == io.EOF || err == io.ErrUnexpectedEOF {
 				break
 			} else if err != nil {
@@ -200,11 +200,11 @@ func (d dissecting) Dissect(b *bufio.Reader, reader api.TcpReader, options *api.
 						ServerPort: reader.GetTcpID().DstPort,
 						IsOutgoing: true,
 					}
-					filterAndEmit(item, reader.GetEmitter(), options)
+					reader.GetEmitter().Emit(item)
 				}
 			}
 		} else {
-			switchingProtocolsHTTP2, err = handleHTTP1ServerStream(b, reader.GetReadProgress(), reader.GetTcpID(), reader.GetCounterPair(), reader.GetCaptureTime(), reader.GetEmitter(), options, reqResMatcher)
+			switchingProtocolsHTTP2, err = handleHTTP1ServerStream(b, reader.GetReadProgress(), reader.GetTcpID(), reader.GetCounterPair(), reader.GetCaptureTime(), reader.GetEmitter(), reqResMatcher)
 			if err == io.EOF || err == io.ErrUnexpectedEOF {
 				break
 			} else if err != nil {
