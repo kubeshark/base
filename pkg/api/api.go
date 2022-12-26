@@ -143,13 +143,18 @@ func (e *Emitting) Emit(item *OutputChannelItem) {
 	}
 }
 
+type Node struct {
+	IP   string `json:"ip"`
+	Name string `json:"name"`
+}
+
 // {Worker}/{Stream}-{Index} uniquely identifies an item
 type Entry struct {
 	Id           string                 `json:"id"`
 	Index        int64                  `json:"index"`
 	Stream       string                 `json:"stream"`
 	Worker       string                 `json:"worker"`
-	Node         string                 `json:"node"`
+	Node         *Node                  `json:"node"`
 	Protocol     Protocol               `json:"protocol"`
 	Tls          bool                   `json:"tls"`
 	Source       *TCP                   `json:"src"`

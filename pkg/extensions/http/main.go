@@ -271,6 +271,7 @@ func (d dissecting) Analyze(item *api.OutputChannelItem, resolvedSource string, 
 	return &api.Entry{
 		Index:    item.Index,
 		Stream:   item.Stream,
+		Node:     &api.Node{},
 		Protocol: item.Protocol,
 		Source: &api.TCP{
 			Name: resolvedSource,
