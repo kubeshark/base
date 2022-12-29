@@ -11,7 +11,6 @@ require (
 	github.com/kubeshark/gopacket v1.1.20
 	github.com/mertyildiran/gqlparser/v2 v2.4.6
 	github.com/ohler55/ojg v1.14.5
-	github.com/op/go-logging v0.0.0-20160315200505-970db520ece7
 	github.com/rs/zerolog v1.28.0
 	github.com/segmentio/kafka-go v0.4.38
 	github.com/stretchr/testify v1.8.1
