@@ -247,7 +247,7 @@ type TcpStream interface {
 	GetIndex() int64
 	GetIsIdentifyMode() bool
 	GetReqResMatchers() []RequestResponseMatcher
-	GetIsTargetted() bool
+	GetIsTargeted() bool
 	GetIsClosed() bool
 	IncrementItemCount()
 }

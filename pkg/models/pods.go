@@ -8,10 +8,10 @@ type PodInfo struct {
 	Namespace string `json:"namespace"`
 }
 
-type TargettedPodStatus struct {
-	Name        string `json:"name"`
-	Namespace   string `json:"namespace"`
-	IsTargetted bool   `json:"isTargetted"`
+type TargetedPodStatus struct {
+	Name       string `json:"name"`
+	Namespace  string `json:"namespace"`
+	IsTargeted bool   `json:"isTargeted"`
 }
 
 type WorkerStatus struct {

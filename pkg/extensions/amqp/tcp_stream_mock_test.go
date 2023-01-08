@@ -12,7 +12,7 @@ type tcpStream struct {
 	identifyMode   bool
 	emittable      bool
 	isClosed       bool
-	isTargetted    bool
+	isTargeted     bool
 	reqResMatchers []api.RequestResponseMatcher
 	sync.Mutex
 }
@@ -47,8 +47,8 @@ func (t *tcpStream) GetReqResMatchers() []api.RequestResponseMatcher {
 	return t.reqResMatchers
 }
 
-func (t *tcpStream) GetIsTargetted() bool {
-	return t.isTargetted
+func (t *tcpStream) GetIsTargeted() bool {
+	return t.isTargeted
 }
 
 func (t *tcpStream) GetIsClosed() bool {
