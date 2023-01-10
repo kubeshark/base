@@ -20,6 +20,7 @@ var _protocol = api.Protocol{
 	FontSize:        11,
 	ReferenceLink:   "https://kafka.apache.org/protocol",
 	Ports:           []string{"9092"},
+	Layer4:          "tcp",
 	Priority:        2,
 }
 

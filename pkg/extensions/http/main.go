@@ -24,6 +24,7 @@ var http10protocol = api.Protocol{
 	FontSize:        12,
 	ReferenceLink:   "https://datatracker.ietf.org/doc/html/rfc1945",
 	Ports:           []string{"80", "443", "8080"},
+	Layer4:          "tcp",
 	Priority:        0,
 }
 
@@ -38,6 +39,7 @@ var http11protocol = api.Protocol{
 	FontSize:        12,
 	ReferenceLink:   "https://datatracker.ietf.org/doc/html/rfc2616",
 	Ports:           []string{"80", "443", "8080"},
+	Layer4:          "tcp",
 	Priority:        0,
 }
 
@@ -52,6 +54,7 @@ var http2Protocol = api.Protocol{
 	FontSize:        11,
 	ReferenceLink:   "https://datatracker.ietf.org/doc/html/rfc7540",
 	Ports:           []string{"80", "443", "8080"},
+	Layer4:          "tcp",
 	Priority:        0,
 }
 
@@ -66,6 +69,7 @@ var grpcProtocol = api.Protocol{
 	FontSize:        11,
 	ReferenceLink:   "https://grpc.github.io/grpc/core/md_doc__p_r_o_t_o_c_o_l-_h_t_t_p2.html",
 	Ports:           []string{"80", "443", "8080", "50051"},
+	Layer4:          "tcp",
 	Priority:        0,
 }
 
@@ -80,6 +84,7 @@ var graphQL1Protocol = api.Protocol{
 	FontSize:        12,
 	ReferenceLink:   "https://graphql.org/learn/serving-over-http/",
 	Ports:           []string{"80", "443", "8080"},
+	Layer4:          "tcp",
 	Priority:        0,
 }
 
@@ -94,6 +99,7 @@ var graphQL2Protocol = api.Protocol{
 	FontSize:        12,
 	ReferenceLink:   "https://graphql.org/learn/serving-over-http/",
 	Ports:           []string{"80", "443", "8080", "50051"},
+	Layer4:          "tcp",
 	Priority:        0,
 }
 

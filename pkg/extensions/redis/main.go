@@ -20,6 +20,7 @@ var protocol = api.Protocol{
 	FontSize:        11,
 	ReferenceLink:   "https://redis.io/topics/protocol",
 	Ports:           []string{"6379"},
+	Layer4:          "tcp",
 	Priority:        3,
 }
 

@@ -20,6 +20,7 @@ var dnsProtocol = api.Protocol{
 	FontSize:        12,
 	ReferenceLink:   "https://www.iana.org/assignments/dns-parameters/dns-parameters.xhtml",
 	Ports:           []string{},
+	Layer4:          "udp",
 	Priority:        4,
 }
 
