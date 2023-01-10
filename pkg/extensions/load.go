@@ -5,6 +5,7 @@ import (
 
 	"github.com/kubeshark/base/pkg/api"
 	amqpExt "github.com/kubeshark/base/pkg/extensions/amqp"
+	dnsExt "github.com/kubeshark/base/pkg/extensions/dns"
 	httpExt "github.com/kubeshark/base/pkg/extensions/http"
 	kafkaExt "github.com/kubeshark/base/pkg/extensions/kafka"
 	redisExt "github.com/kubeshark/base/pkg/extensions/redis"
@@ -46,6 +47,13 @@ func LoadExtensions() {
 	extensionRedis.Dissector = dissectorRedis
 	Extensions = append(Extensions, extensionRedis)
 	ExtensionsMap[extensionRedis.Protocol.Name] = extensionRedis
+
+	extensionDns := &api.Extension{}
+	dissectorDns := dnsExt.NewDissector()
+	dissectorDns.Register(extensionDns)
+	extensionDns.Dissector = dissectorDns
+	Extensions = append(Extensions, extensionDns)
+	ExtensionsMap[extensionDns.Protocol.Name] = extensionDns
 
 	sort.Slice(Extensions, func(i, j int) bool {
 		return Extensions[i].Protocol.Priority < Extensions[j].Protocol.Priority
