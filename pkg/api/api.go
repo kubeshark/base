@@ -136,12 +136,10 @@ func (e *Emitting) Emit(item *OutputChannelItem) {
 	e.AppStats.IncMatchedPairs()
 	e.Stream.SetAsEmittable()
 
-	if !e.Stream.GetIsIdentifyMode() {
-		item.Stream = e.Stream.GetPcapId()
-		item.Index = e.Stream.GetIndex()
-		e.Stream.IncrementItemCount()
-		e.OutputChannel <- item
-	}
+	item.Stream = e.Stream.GetPcapId()
+	item.Index = e.Stream.GetIndex()
+	e.Stream.IncrementItemCount()
+	e.OutputChannel <- item
 }
 
 type Node struct {
