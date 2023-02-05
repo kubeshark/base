@@ -28,7 +28,7 @@ func (as *AppStats) IncDroppedTcpStreams() {
 
 func (as *AppStats) IncPacketsCount() uint64 {
 	atomic.AddUint64(&as.PacketsCount, 1)
-	return as.PacketsCount
+	return atomic.LoadUint64(&as.PacketsCount)
 }
 
 func (as *AppStats) IncTcpPacketsCount() {
