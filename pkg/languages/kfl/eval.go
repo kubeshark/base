@@ -462,6 +462,9 @@ func redactRecursively(obj interface{}, paths []string) (newObj interface{}, err
 		if len(xmlPaths) > 1 {
 			var xmlValue []byte
 			xmlValue, err = redactXml(result[0], xmlPaths[1])
+			if err != nil {
+				return
+			}
 
 			err = jsonPath.Set(newObj, string(xmlValue))
 			return
@@ -670,8 +673,6 @@ func evalPrimary(pri *Primary, obj interface{}) (v interface{}, newObj interface
 
 // Evaluates unary expressions like `!`, `-`
 func evalUnary(unar *Unary, obj interface{}) (v interface{}, newObj interface{}, collapse bool, err error) {
-	newObj = obj
-
 	if unar.Unary != nil {
 		v, newObj, collapse, err = evalUnary(unar.Unary, obj)
 		if err != nil || collapse {
@@ -696,8 +697,6 @@ func evalUnary(unar *Unary, obj interface{}) (v interface{}, newObj interface{},
 
 // Evaluates comparison expressions like `>=`, `>`, `<=`, `<`
 func evalComparison(comp *Comparison, obj interface{}) (v interface{}, newObj interface{}, collapse bool, err error) {
-	newObj = obj
-
 	var logic interface{}
 	logic, newObj, collapse, err = evalUnary(comp.Unary, obj)
 	if err != nil || collapse {
@@ -721,8 +720,6 @@ func evalComparison(comp *Comparison, obj interface{}) (v interface{}, newObj in
 
 // Evaluates equality expressions like `!=`, `==`
 func evalEquality(equ *Equality, obj interface{}) (v interface{}, newObj interface{}, collapse bool, err error) {
-	newObj = obj
-
 	var comp interface{}
 	comp, newObj, collapse, err = evalComparison(equ.Comparison, obj)
 	if err != nil || collapse {
@@ -746,8 +743,6 @@ func evalEquality(equ *Equality, obj interface{}) (v interface{}, newObj interfa
 
 // Evaluates logical expressions like `and`, `or`
 func evalLogical(logic *Logical, obj interface{}) (v interface{}, newObj interface{}, collapse bool, err error) {
-	newObj = obj
-
 	var unar interface{}
 	unar, newObj, collapse, err = evalEquality(logic.Equality, obj)
 	if err != nil || collapse {
