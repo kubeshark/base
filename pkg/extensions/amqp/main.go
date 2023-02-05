@@ -358,7 +358,7 @@ func (d dissecting) Summarize(entry *api.Entry) *api.BaseEntry {
 		Source:       entry.Source,
 		Destination:  entry.Destination,
 		Outgoing:     entry.Outgoing,
-		Latency:      entry.ElapsedTime,
+		ElapsedTime:  entry.ElapsedTime,
 	}
 }
 

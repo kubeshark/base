@@ -197,7 +197,7 @@ type BaseEntry struct {
 	Source       *TCP     `json:"src"`
 	Destination  *TCP     `json:"dst"`
 	Outgoing     bool     `json:"outgoing"`
-	Latency      int64    `json:"latency"`
+	ElapsedTime  int64    `json:"latency"`
 }
 
 const (
