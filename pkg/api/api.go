@@ -167,6 +167,8 @@ type Entry struct {
 	RequestSize  int                    `json:"requestSize"`
 	ResponseSize int                    `json:"responseSize"`
 	ElapsedTime  int64                  `json:"elapsedTime"`
+	Passed       bool                   `json:"passed"`
+	Failed       bool                   `json:"failed"`
 }
 
 func (e *Entry) BuildId() {
@@ -198,6 +200,8 @@ type BaseEntry struct {
 	Destination  *TCP     `json:"dst"`
 	Outgoing     bool     `json:"outgoing"`
 	ElapsedTime  int64    `json:"latency"`
+	Passed       bool     `json:"passed"`
+	Failed       bool     `json:"failed"`
 }
 
 const (
