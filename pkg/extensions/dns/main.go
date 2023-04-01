@@ -91,6 +91,7 @@ func (d dissecting) Summarize(entry *api.Entry) *api.BaseEntry {
 		Source:       entry.Source,
 		Destination:  entry.Destination,
 		Outgoing:     entry.Outgoing,
+		Size:         entry.RequestSize + entry.ResponseSize,
 		ElapsedTime:  entry.ElapsedTime,
 		Passed:       entry.Passed,
 		Failed:       entry.Failed,
