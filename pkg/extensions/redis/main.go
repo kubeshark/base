@@ -70,12 +70,12 @@ func (d dissecting) Analyze(item *api.OutputChannelItem, resolvedSource string, 
 		Stream:   item.Stream,
 		Node:     &api.Node{},
 		Protocol: protocol,
-		Source: &api.TCP{
+		Source: &api.Address{
 			Name: resolvedSource,
 			IP:   item.ConnectionInfo.ClientIP,
 			Port: item.ConnectionInfo.ClientPort,
 		},
-		Destination: &api.TCP{
+		Destination: &api.Address{
 			Name: resolvedDestination,
 			IP:   item.ConnectionInfo.ServerIP,
 			Port: item.ConnectionInfo.ServerPort,

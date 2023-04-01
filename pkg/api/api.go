@@ -30,7 +30,7 @@ type Protocol struct {
 	Priority        uint8    `json:"priority"`
 }
 
-type TCP struct {
+type Address struct {
 	IP   string `json:"ip"`
 	Port string `json:"port"`
 	Name string `json:"name"`
@@ -156,8 +156,8 @@ type Entry struct {
 	Node         *Node                  `json:"node"`
 	Protocol     Protocol               `json:"protocol"`
 	Tls          bool                   `json:"tls"`
-	Source       *TCP                   `json:"src"`
-	Destination  *TCP                   `json:"dst"`
+	Source       *Address               `json:"src"`
+	Destination  *Address               `json:"dst"`
 	Namespace    string                 `json:"namespace"`
 	Outgoing     bool                   `json:"outgoing"`
 	Timestamp    int64                  `json:"timestamp"`
@@ -196,8 +196,8 @@ type BaseEntry struct {
 	Method       string   `json:"method,omitempty"`
 	MethodQuery  string   `json:"methodQuery,omitempty"`
 	Timestamp    int64    `json:"timestamp,omitempty"`
-	Source       *TCP     `json:"src"`
-	Destination  *TCP     `json:"dst"`
+	Source       *Address `json:"src"`
+	Destination  *Address `json:"dst"`
 	Outgoing     bool     `json:"outgoing"`
 	Size         int      `json:"size"`
 	ElapsedTime  int64    `json:"latency"`
