@@ -55,7 +55,7 @@ func (d dissecting) Dissect(b *bufio.Reader, reader api.TcpReader) error {
 	}
 }
 
-func (d dissecting) Analyze(item *api.OutputChannelItem, resolvedSource string, resolvedDestination string, namespace string) *api.Entry {
+func (d dissecting) Analyze(item *api.OutputChannelItem, resolvedSource *api.Resolution, resolvedDestination *api.Resolution) *api.Entry {
 	request := item.Pair.Request.Payload.(map[string]interface{})
 	response := item.Pair.Response.Payload.(map[string]interface{})
 	reqDetails := request["details"].(map[string]interface{})
@@ -66,21 +66,12 @@ func (d dissecting) Analyze(item *api.OutputChannelItem, resolvedSource string, 
 		elapsedTime = 0
 	}
 	return &api.Entry{
-		Index:    item.Index,
-		Stream:   item.Stream,
-		Node:     &api.Node{},
-		Protocol: protocol,
-		Source: &api.Address{
-			Name: resolvedSource,
-			IP:   item.ConnectionInfo.ClientIP,
-			Port: item.ConnectionInfo.ClientPort,
-		},
-		Destination: &api.Address{
-			Name: resolvedDestination,
-			IP:   item.ConnectionInfo.ServerIP,
-			Port: item.ConnectionInfo.ServerPort,
-		},
-		Namespace:    namespace,
+		Index:        item.Index,
+		Stream:       item.Stream,
+		Node:         &api.Node{},
+		Protocol:     protocol,
+		Source:       resolvedSource,
+		Destination:  resolvedDestination,
 		Outgoing:     item.ConnectionInfo.IsOutgoing,
 		Request:      reqDetails,
 		Response:     resDetails,

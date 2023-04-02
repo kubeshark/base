@@ -30,10 +30,17 @@ type Protocol struct {
 	Priority        uint8    `json:"priority"`
 }
 
-type Address struct {
+type Pod struct {
+	Name      string `json:"name"`
+	Namespace string `json:"namespace"`
+	Node      *Node  `json:"node"`
+}
+
+type Resolution struct {
 	IP   string `json:"ip"`
 	Port string `json:"port"`
 	Name string `json:"name"`
+	Pod  *Pod   `json:"pod"`
 }
 
 type Extension struct {
@@ -110,7 +117,7 @@ func (p *ReadProgress) Reset() {
 type Dissector interface {
 	Register(*Extension)
 	Dissect(b *bufio.Reader, reader TcpReader) error
-	Analyze(item *OutputChannelItem, resolvedSource string, resolvedDestination string, namespace string) *Entry
+	Analyze(item *OutputChannelItem, resolvedSource *Resolution, resolvedDestination *Resolution) *Entry
 	Summarize(entry *Entry) *BaseEntry
 	Represent(request map[string]interface{}, response map[string]interface{}) (object []byte, err error)
 	Macros() map[string]string
@@ -156,9 +163,8 @@ type Entry struct {
 	Node         *Node                  `json:"node"`
 	Protocol     Protocol               `json:"protocol"`
 	Tls          bool                   `json:"tls"`
-	Source       *Address               `json:"src"`
-	Destination  *Address               `json:"dst"`
-	Namespace    string                 `json:"namespace"`
+	Source       *Resolution            `json:"src"`
+	Destination  *Resolution            `json:"dst"`
 	Outgoing     bool                   `json:"outgoing"`
 	Timestamp    int64                  `json:"timestamp"`
 	StartTime    time.Time              `json:"startTime"`
@@ -184,25 +190,25 @@ type EntryWrapper struct {
 
 // {Worker}/{Id} uniquely identifies an item
 type BaseEntry struct {
-	Id           string   `json:"id"`
-	Stream       string   `json:"stream"`
-	Worker       string   `json:"worker"`
-	Protocol     Protocol `json:"proto,omitempty"`
-	Tls          bool     `json:"tls"`
-	Summary      string   `json:"summary,omitempty"`
-	SummaryQuery string   `json:"summaryQuery,omitempty"`
-	Status       int      `json:"status"`
-	StatusQuery  string   `json:"statusQuery"`
-	Method       string   `json:"method,omitempty"`
-	MethodQuery  string   `json:"methodQuery,omitempty"`
-	Timestamp    int64    `json:"timestamp,omitempty"`
-	Source       *Address `json:"src"`
-	Destination  *Address `json:"dst"`
-	Outgoing     bool     `json:"outgoing"`
-	Size         int      `json:"size"`
-	ElapsedTime  int64    `json:"latency"`
-	Passed       bool     `json:"passed"`
-	Failed       bool     `json:"failed"`
+	Id           string      `json:"id"`
+	Stream       string      `json:"stream"`
+	Worker       string      `json:"worker"`
+	Protocol     Protocol    `json:"proto,omitempty"`
+	Tls          bool        `json:"tls"`
+	Summary      string      `json:"summary,omitempty"`
+	SummaryQuery string      `json:"summaryQuery,omitempty"`
+	Status       int         `json:"status"`
+	StatusQuery  string      `json:"statusQuery"`
+	Method       string      `json:"method,omitempty"`
+	MethodQuery  string      `json:"methodQuery,omitempty"`
+	Timestamp    int64       `json:"timestamp,omitempty"`
+	Source       *Resolution `json:"src"`
+	Destination  *Resolution `json:"dst"`
+	Outgoing     bool        `json:"outgoing"`
+	Size         int         `json:"size"`
+	ElapsedTime  int64       `json:"latency"`
+	Passed       bool        `json:"passed"`
+	Failed       bool        `json:"failed"`
 }
 
 const (
